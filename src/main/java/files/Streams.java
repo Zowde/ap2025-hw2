@@ -15,23 +15,21 @@ public class Streams {
      * @param in
      * @return A list containing the bytes between the first occurrence of a quote character and the second.
      */
+    // dfsdfsdfsdf22222
         public static List<Byte> getQuoted(InputStream in) throws IOException {
             // TODO: Implement
-             List<Byte> lt = new ArrayList<>();
-             int data = in.read();
-             while(data != '"') 
-             {   
-                 data = in.read();
-             }
-             data = in.read();
-             
-             while(data != -1 && data != '"')
-             {
-              lt.add((byte)data);
-               data = in.read();
-             }
-             return lt;
+             int data;
+             List<Byte> ls = new ArrayList<>();
+            while( (data = in.read()) != '"' && data != -1 ){
+                // reading the stream until " appear or the end of stram 
             }
+            if(data == -1)// " occur zero times 
+                return null;
+            while( (data = in.read()) != '"' && data != -1 ){
+                ls.add((byte)data);
+            }
+            return ls;
+        }
 
 
     /**
