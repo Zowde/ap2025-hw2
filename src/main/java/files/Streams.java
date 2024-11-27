@@ -39,11 +39,28 @@ public class Streams {
      * @param endMark the string indicating to stop reading.
      * @return The string read up to (not including) the endMark (if the endMark is not found, return up to the end of the stream).
      */
+    /////asdasdadamsdasdas///
+    // adam // 
+    //  a    //
     public static String readUntil(Reader in, String endMark) throws IOException {
-        // TODO: Implement
-        return null;
+        // we will read each char to st and check if the last 4 chars are enmark
+        StringBuilder st = new StringBuilder(endMark.length());
+       int ch;
+      String temp ="";
+        while ((ch = in.read()) != -1) {
+            
+            st.append((char)ch);
+        if(st.length() >= endMark.length() ){
+           temp = st.substring(st.length()-endMark.length(), st.length());
+            if(temp.compareTo(endMark) == 0) 
+            {
+                return st.substring(0,st.length()-endMark.length());
+            } 
+          }
+        }
+              return st.toString();
+        
     }
-
     /**
      * Copy bytes from input to output, ignoring all occurrences of badByte.
      *
