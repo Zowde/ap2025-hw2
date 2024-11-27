@@ -1,5 +1,5 @@
 package files;
-
+import java.util.ArrayList;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,10 +15,23 @@ public class Streams {
      * @param in
      * @return A list containing the bytes between the first occurrence of a quote character and the second.
      */
-    public static List<Byte> getQuoted(InputStream in) throws IOException {
-        // TODO: Implement
-        return null;
-    }
+        public static List<Byte> getQuoted(InputStream in) throws IOException {
+            // TODO: Implement
+             List<Byte> lt = new ArrayList<>();
+             int data = in.read();
+             while(data != '"') 
+             {   
+                 data = in.read();
+             }
+             data = in.read();
+             
+             while(data != -1 && data != '"')
+             {
+              lt.add((byte)data);
+               data = in.read();
+             }
+             return lt;
+            }
 
 
     /**
