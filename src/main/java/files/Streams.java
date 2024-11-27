@@ -69,9 +69,17 @@ public class Streams {
      * @param badByte
      */
     public static void filterOut(InputStream in, OutputStream out, byte badByte) throws IOException {
-        // TODO: Implement
+        int ch;
+        // Convert badByte to unsigned integer for comparison
+        int badByteUnsigned = Byte.toUnsignedInt(badByte);
+        
+        while ((ch = in.read()) != -1) {
+            // Convert the read byte (ch) to unsigned and compare
+            if (Byte.toUnsignedInt((byte) ch) != badByteUnsigned) {
+                out.write(ch);  // Write the byte if it's not the badByte
+            }    
+        }
     }
-
     /**
      * Read a 40-bit (unsigned) integer from the stream and return it. The number is represented as five bytes,
      * with the most-significant byte first.
