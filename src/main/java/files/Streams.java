@@ -1,7 +1,9 @@
 package files;
 import java.util.ArrayList;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.List;
@@ -90,6 +92,17 @@ public class Streams {
      */
     public static long readNumber(InputStream in) throws IOException {
         // TODO: Implement
-        return 0;
+       long x=0;
+        int data , count = 0;
+       while((data=in.read()) != -1 && count <= 4) // reading byte from the stream
+       {     
+            x = (x<<8) | (data & 0xFF); 
+            count ++;
+       }
+       if( count < 5)
+       return -1;
+
+
+        return x;
     }
 }
