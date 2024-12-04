@@ -24,60 +24,58 @@ import javax.print.DocFlavor.READER;
  * @author talm
  */
 public class InMemoryDictionary extends TreeMap<String, String> implements PersistentDictionary {
-    private static final long serialVersionUID = 1L; // (because we're extending a serializable class)
-     private File file;
-    public InMemoryDictionary(File dictFile) {
-        // TODO: Implement constructor
-        this.file = dictFile;
+    private static final long serialVersionUID = 1L;
+    private File file;
 
+    public InMemoryDictionary(File dictFile) {
+        this.file = dictFile;
     }
 
     @Override
     public void open() throws IOException {
-         if(size() == 0)  // assure that the treemap is empty 
-         {
-            
-            Reader reader = new FileReader(file);
-            BufferedReader bf = new BufferedReader(reader);
-            String line = bf.readLine(); // extract a line from the file
-            while (line != null)
-            {
-             int index  = line.indexOf(":");
-             if(index > 0){
-            put(line.substring(0, index), line.substring(index+1));
-            line = bf.readLine();     
-             }
-             else
-             {
-                clear();
-                break;
-             }
-            }
+        try {
+            if (size() == 0 && file.exists()) {  // Only load if map is empty and file exists
+                FileReader fr = new FileReader(file);
+                BufferedReader bf = new BufferedReader(fr);
+                String line = bf.readLine();  // Read the first line
 
-         }
-        // TODO Auto-generated method stub
-    
+                while (line != null) {
+                    int index = line.indexOf(":");
+                    if (index > 0) {
+                        String word = line.substring(index + 1).equals("") ? "" : line.substring(index + 1);
+                        put(line.substring(0, index), word);
+                    }
+                    line = bf.readLine();  // Read the next line
+                }
+                bf.close();  // Ensure the reader is closed
+            }
+        } catch (IOException e) {
+            e.printStackTrace();  // Handle any potential IO errors
+        }
     }
 
     @Override
     public void close() throws IOException {
-        // TODO Auto-generated method stub
-          FileWriter writer = new FileWriter(file);
-          BufferedWriter bw = new BufferedWriter(writer);
-       for (Map.Entry<String, String> entry : entrySet())
-       {
-            bw.write(entry.getKey()+":"+entry.getValue());
-            bw.newLine();
-         }
-         bw.close();
-
-    }
-    @Override
-    public void clear () {
-        if(size() != 0) // assure that the treeset isnt empty 
-        {
-            super.clear();
-
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            // Write all map entries to the file
+            for (Map.Entry<String, String> entry : entrySet()) {
+                bw.write(entry.getKey() + ":" + entry.getValue());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();  // Handle any potential IO errors
         }
-}
+    }
+
+    @Override
+    public void clear() {
+        super.clear();  // Clears the map in memory
+
+        // Try to clear the file as well by overwriting it with an empty state
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            // Nothing to write, effectively clears the file
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle file write errors (consider logging instead)
+        }
+    }
 }
