@@ -43,9 +43,15 @@ public class InMemoryDictionary extends TreeMap<String, String> implements Persi
             while (line != null)
             {
              int index  = line.indexOf(":");
+             if(index > 0){
             put(line.substring(0, index), line.substring(index+1));
             line = bf.readLine();     
- 
+             }
+             else
+             {
+                clear();
+                break;
+             }
             }
 
          }
@@ -63,6 +69,15 @@ public class InMemoryDictionary extends TreeMap<String, String> implements Persi
             bw.write(entry.getKey()+":"+entry.getValue());
             bw.newLine();
          }
+         bw.close();
 
     }
+    @Override
+    public void clear () {
+        if(size() != 0) // assure that the treeset isnt empty 
+        {
+            super.clear();
+
+        }
+}
 }
