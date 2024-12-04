@@ -34,7 +34,7 @@ public class InMemoryDictionary extends TreeMap<String, String> implements Persi
 
     @Override
     public void open() throws IOException {
-         if(size() != 0)  // assure that the treemap isnt empty 
+         if(size() == 0)  // assure that the treemap is empty 
          {
             
             Reader reader = new FileReader(file);
